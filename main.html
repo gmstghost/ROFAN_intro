@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>잉크로즈 | 로판 트친소표 메이커</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+
+  <header class="site-header">
+    <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="7" stroke-width="1.2"/>
+      <path d="M20 13 C20 8 24 6 27 8" stroke-width="1.1"/>
+      <path d="M20 13 C20 8 16 6 13 8" stroke-width="1.1"/>
+      <path d="M20 27 L20 34" stroke-width="1.1"/>
+      <path d="M20 34 L16 37" stroke-width="1.1"/>
+    </svg>
+    <div class="brand-text">
+      <p class="brand-name">잉크로즈</p>
+      <p class="brand-tagline">로판 트친소표를 만들고, 바로 트위터로 넘겨보세요</p>
+    </div>
+  </header>
+
+  <main class="builder">
+
+    <!-- ============ FORM ============ -->
+    <section class="form-panel" aria-label="트친소표 입력 폼">
+      <div class="form-panel-head">
+        <h2>정보 입력</h2>
+        <button type="button" class="reset-btn" id="resetBtn">전체 초기화</button>
+      </div>
+
+      <!-- 1. 닉네임/아이디/사진 -->
+      <div class="field-group">
+        <label class="field-label"><span class="field-number">1</span> 닉네임 · 아이디 · 프로필 사진</label>
+        <div class="row-2">
+          <input type="text" id="nickname" placeholder="닉네임 (예: 은하)" maxlength="30">
+          <input type="text" id="handle" placeholder="트위터 아이디 (@ 제외)" maxlength="30">
+        </div>
+        <div class="photo-field">
+          <div class="photo-preview" id="photoPreview">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.3"/>
+              <path d="M4 20c1.6-4 4.8-6 8-6s6.4 2 8 6" stroke="currentColor" stroke-width="1.3"/>
+            </svg>
+          </div>
+          <label class="upload-btn" for="photoInput">프로필 사진 선택
+            <input type="file" id="photoInput" accept="image/*" class="hidden">
+          </label>
+          <span class="upload-filename" id="uploadFilename"></span>
+        </div>
+      </div>
+
+      <!-- 2. 나이 -->
+      <div class="field-group">
+        <label class="field-label"><span class="field-number">2</span> 나이</label>
+        <input type="text" id="age" placeholder="예: 20, 20대 초반, 비공개" maxlength="20">
+      </div>
+
+      <!-- 3. 주 이용 플랫폼 -->
+      <div class="field-group">
+        <label class="field-label"><span class="field-number">3</span> 주 이용 플랫폼 <span class="field-hint">· 복수 선택</span></label>
+        <div class="chip-group" data-group="platform">
+          <button type="button" class="chip" data-value="카카오페이지">카카오페이지</button>
+          <button type="button" class="chip" data-value="시리즈">시리즈</button>
+          <button type="button" class="chip" data-value="리디북스">리디북스</button>
+          <button type="button" class="chip" data-value="예스24">예스24</button>
+          <button type="button" class="chip" data-value="알라딘">알라딘</button>
+          <button type="button" class="chip" data-value="교보문고">교보문고</button>
+          <button type="button" class="chip" data-value="조아라">조아라</button>
+          <button type="button" class="chip" data-value="기타">기타</button>
+        </div>
+        <input type="text" class="other-input hidden" id="platformOther" data-other-for="platform" placeholder="직접 입력">
+      </div>
+
+      <!-- 4. 접속 시간대 -->
+      <div class="field-group">
+        <label class="field-label"><span class="field-number">4</span> 접속 시간대 <span class="field-hint">· 복수 선택</span></label>
+        <div class="chip-group" data-group="time">
+          <button type="button" class="chip" data-value="아침">아침</button>
+          <button type="button" class="chip" data-value="오전">오전</button>
+          <button type="button" class="chip" data-value="오후">오후</button>
+          <button type="button" class="chip" data-value="밤">밤</button>
+          <button type="button" class="chip" data-value="새벽">새벽</button>
+          <button type="button" class="chip" data-value="랜덤">랜덤</button>
+        </div>
+      </div>
+
+      <!-- 5. 이별은 -->
+      <div class="field-group">
+        <label class="field-label"><span class="field-number">5</span> 이별은</label>
+        <div class="pill-group" data-group="ending">
+          <button type="button" class="pill" data-value="블언블">블언블</button>
+          <button type="button" class="pill" data-value="블락">블락</button>
+          <button type="button" class="pill" data-value="언팔">언팔</button>
+        </div>
+      </div>
+
+      <!-- 6. 트윗 성향 -->
+      <div class="field-group">
+        <label class="field-label"><span class="field-number">6</span> 트윗 성향 <span class="field-hint">· 복수 선택</span></label>
+        <div class="chip-group" data-group="tendency">
+          <button type="button" class="chip" data-value="일상">일상</button>
+          <button type="button" class="chip" data-value="앓이">앓이</button>
+          <button type="button" class="chip" data-value="후기">후기</button>
+          <button type="button" class="chip" data-value="읽타">읽타</button>
+          <button type="button" class="chip" data-value="그림">그림</button>
+          <button type="button" class="chip" data-value="글">글</button>
+          <button type="button" class="chip" data-value="기타">기타</button>
+        </div>
+        <input type="text" class="other-input hidden" id="tendencyOther" data-other-for="tendency" placeholder="직접 입력">
+      </div>
+
+      <!-- 7. 좋아하는 작품 -->
+      <div class="field-group">
+        <label class="field-label"><span class="field-number">7</span> 좋아하는 작품</label>
+        <p class="field-hint">여러 작품은 줄바꿈으로 구분해주세요</p>
+        <textarea id="favorites" placeholder="예: 재혼 황후&#10;버림받은 황비"></textarea>
+      </div>
+
+      <!-- 8. 지뢰 -->
+      <div class="field-group">
+        <label class="field-label"><span class="field-number">8</span> 지뢰</label>
+        <textarea id="mines" placeholder="예: 다회차, 재벌집 코드"></textarea>
+      </div>
+
+      <!-- 9. FREE -->
+      <div class="field-group">
+        <label class="field-label"><span class="field-number">9</span> FREE</label>
+        <textarea id="free" placeholder="예: 서브남 스포, 고구마 전개"></textarea>
+      </div>
+
+      <!-- 10. 타장르 -->
+      <div class="field-group">
+        <label class="field-label"><span class="field-number">10</span> 타장르</label>
+        <textarea id="otherGenres" placeholder="예: 현판, BL, 무협"></textarea>
+      </div>
+
+    </section>
+
+    <!-- ============ PREVIEW ============ -->
+    <aside class="preview-panel">
+
+      <div class="card" id="card">
+        <svg class="card-flourish tl" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 40 C4 20 20 4 40 4" stroke-width="1.2"/>
+          <path d="M4 30 C4 16 16 4 30 4" stroke-width="1"/>
+          <circle cx="4" cy="40" r="2" fill="var(--gold)"/>
+          <path d="M40 4 C46 4 50 8 50 14" stroke-width="1"/>
+          <ellipse cx="52" cy="16" rx="3" ry="1.6" transform="rotate(40 52 16)"/>
+        </svg>
+        <svg class="card-flourish tr" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 40 C4 20 20 4 40 4" stroke-width="1.2"/>
+          <path d="M4 30 C4 16 16 4 30 4" stroke-width="1"/>
+          <circle cx="4" cy="40" r="2" fill="var(--gold)"/>
+          <path d="M40 4 C46 4 50 8 50 14" stroke-width="1"/>
+          <ellipse cx="52" cy="16" rx="3" ry="1.6" transform="rotate(40 52 16)"/>
+        </svg>
+        <svg class="card-flourish bl" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 40 C4 20 20 4 40 4" stroke-width="1.2"/>
+          <path d="M4 30 C4 16 16 4 30 4" stroke-width="1"/>
+          <circle cx="4" cy="40" r="2" fill="var(--gold)"/>
+          <path d="M40 4 C46 4 50 8 50 14" stroke-width="1"/>
+          <ellipse cx="52" cy="16" rx="3" ry="1.6" transform="rotate(40 52 16)"/>
+        </svg>
+        <svg class="card-flourish br" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 40 C4 20 20 4 40 4" stroke-width="1.2"/>
+          <path d="M4 30 C4 16 16 4 30 4" stroke-width="1"/>
+          <circle cx="4" cy="40" r="2" fill="var(--gold)"/>
+          <path d="M40 4 C46 4 50 8 50 14" stroke-width="1"/>
+          <ellipse cx="52" cy="16" rx="3" ry="1.6" transform="rotate(40 52 16)"/>
+        </svg>
+
+        <div class="avatar-ring">
+          <div class="avatar-ring-inner" id="avatarInner">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="8" r="3.4" stroke-width="1.3"/>
+              <path d="M4 20c1.6-4 4.8-6 8-6s6.4 2 8 6" stroke-width="1.3"/>
+            </svg>
+          </div>
+        </div>
+
+        <p class="card-name is-placeholder" id="cardName">닉네임</p>
+        <p class="card-id is-placeholder" id="cardId">@아이디</p>
+        <p class="card-age hidden" id="cardAge"></p>
+
+        <div class="card-divider"><span class="diamond"></span></div>
+
+        <div class="info-rows" id="infoRows">
+          <div class="info-row hidden" id="row-platform"><span class="label">이용 플랫폼</span><span class="value" id="val-platform"></span></div>
+          <div class="info-row hidden" id="row-time"><span class="label">접속 시간대</span><span class="value" id="val-time"></span></div>
+          <div class="info-row hidden" id="row-ending"><span class="label">이별은</span><span class="value" id="val-ending"></span></div>
+          <div class="info-row hidden" id="row-tendency"><span class="label">트윗 성향</span><span class="value" id="val-tendency"></span></div>
+        </div>
+
+        <div class="notes">
+          <div class="note-section hidden" id="sec-favorites">
+            <p class="note-title"><span class="mark">♥</span> 최애작</p>
+            <p class="note-body" id="val-favorites"></p>
+          </div>
+          <div class="note-section hidden" id="sec-mines">
+            <p class="note-title"><span class="mark">✕</span> 지뢰</p>
+            <p class="note-body" id="val-mines"></p>
+          </div>
+          <div class="note-section hidden" id="sec-free">
+            <p class="note-title"><span class="mark">✓</span> FREE</p>
+            <p class="note-body" id="val-free"></p>
+          </div>
+          <div class="note-section hidden" id="sec-otherGenres">
+            <p class="note-title"><span class="mark">◇</span> 타장르</p>
+            <p class="note-body" id="val-otherGenres"></p>
+          </div>
+        </div>
+
+        <div class="card-footer" id="cardFooter"></div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="downloadBtn">이미지로 저장</button>
+        <button type="button" class="btn btn-secondary" id="tweetBtn">트위터 새 글쓰기 열기</button>
+      </div>
+      <p class="share-hint">트위터 웹은 링크로 이미지를 바로 첨부할 수 없어요. <b>① 이미지 저장</b>으로 카드를 내려받은 뒤, <b>② 트위터 새 글쓰기 열기</b>로 열린 창에 저장한 이미지를 첨부해주세요.</p>
+
+    </aside>
+
+  </main>
+
+  <footer class="page-footer">잉크로즈 · 로판 트친소표 메이커</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
