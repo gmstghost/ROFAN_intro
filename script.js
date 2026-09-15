@@ -14,7 +14,7 @@
 
   var state = {
     nickname: "", handle: "", avatarDataUrl: null,
-    age: "",
+    age: "", ageOther: "",
     platforms: new Set(), platformOther: "",
     times: new Set(),
     ending: null,
@@ -46,7 +46,7 @@
   }
 
   function isDraftEmpty(data){
-    return !data.nickname && !data.handle && !data.avatarDataUrl && !data.age &&
+    return !data.nickname && !data.handle && !data.avatarDataUrl && !data.age && !data.ageOther &&
       data.platforms.length === 0 && !data.platformOther &&
       data.times.length === 0 && !data.ending &&
       data.tendencies.length === 0 && !data.tendencyOther &&
@@ -59,6 +59,7 @@
       handle: state.handle,
       avatarDataUrl: state.avatarDataUrl,
       age: state.age,
+      ageOther: state.ageOther,
       platforms: Array.from(state.platforms),
       platformOther: state.platformOther,
       times: Array.from(state.times),
@@ -118,6 +119,7 @@
     state.handle = data.handle || "";
     state.avatarDataUrl = data.avatarDataUrl || null;
     state.age = data.age || "";
+    state.ageOther = data.ageOther || "";
     state.platforms = new Set(data.platforms || []);
     state.platformOther = data.platformOther || "";
     state.times = new Set(data.times || []);
@@ -131,13 +133,18 @@
 
     document.getElementById("nickname").value = state.nickname;
     document.getElementById("handle").value = state.handle;
-    document.getElementById("age").value = state.age;
+    document.getElementById("ageOther").value = state.ageOther;
     document.getElementById("favorites").value = state.favorites;
     document.getElementById("mines").value = state.mines;
     document.getElementById("free").value = state.free;
     document.getElementById("otherGenres").value = state.otherGenres;
     document.getElementById("platformOther").value = state.platformOther;
     document.getElementById("tendencyOther").value = state.tendencyOther;
+
+    document.querySelectorAll('.chip-group[data-group="age"] .chip').forEach(function(chip){
+      if(state.age === chip.getAttribute("data-value")) chip.classList.add("active");
+    });
+    if(state.age === "직접 입력") document.getElementById("ageOther").classList.remove("hidden");
 
     document.querySelectorAll('.chip-group[data-group="platform"] .chip').forEach(function(chip){
       if(state.platforms.has(chip.getAttribute("data-value"))) chip.classList.add("active");
@@ -219,8 +226,9 @@
     }
 
     var ageEl = document.getElementById("cardAge");
-    if(state.age.trim()){
-      ageEl.textContent = state.age.trim() + "세";
+    var ageText = state.age === "직접 입력" ? state.ageOther.trim() : state.age;
+    if(ageText){
+      ageEl.textContent = ageText;
       ageEl.classList.remove("hidden");
     } else {
       ageEl.classList.add("hidden");
@@ -253,7 +261,7 @@
   // ---- text inputs ----
   document.getElementById("nickname").addEventListener("input", function(e){ state.nickname = e.target.value; render(); });
   document.getElementById("handle").addEventListener("input", function(e){ state.handle = e.target.value; render(); });
-  document.getElementById("age").addEventListener("input", function(e){ state.age = e.target.value; render(); });
+  document.getElementById("ageOther").addEventListener("input", function(e){ state.ageOther = e.target.value; render(); });
   document.getElementById("favorites").addEventListener("input", function(e){ state.favorites = e.target.value; render(); });
   document.getElementById("mines").addEventListener("input", function(e){ state.mines = e.target.value; render(); });
   document.getElementById("free").addEventListener("input", function(e){ state.free = e.target.value; render(); });
@@ -277,9 +285,38 @@
     reader.readAsDataURL(file);
   });
 
+  // ---- age chip group (single select) ----
+  document.querySelectorAll('.chip-group[data-group="age"] .chip').forEach(function(chip){
+    chip.addEventListener("click", function(){
+      var value = chip.getAttribute("data-value");
+      var ageOtherInput = document.getElementById("ageOther");
+      var isSame = state.age === value;
+
+      document.querySelectorAll('.chip-group[data-group="age"] .chip').forEach(function(c){ c.classList.remove("active"); });
+
+      if(isSame){
+        state.age = "";
+      } else {
+        state.age = value;
+        chip.classList.add("active");
+      }
+
+      if(state.age === "직접 입력"){
+        ageOtherInput.classList.remove("hidden");
+        ageOtherInput.focus();
+      } else {
+        ageOtherInput.classList.add("hidden");
+        ageOtherInput.value = "";
+        state.ageOther = "";
+      }
+      render();
+    });
+  });
+
   // ---- chip groups (multi select) ----
   document.querySelectorAll(".chip-group").forEach(function(group){
     var groupName = group.getAttribute("data-group");
+    if(groupName === "age") return; // 나이는 위에서 단일 선택으로 별도 처리
     var stateKey = groupName === "platform" ? "platforms" : groupName === "time" ? "times" : "tendencies";
     group.querySelectorAll(".chip").forEach(function(chip){
       chip.addEventListener("click", function(){
@@ -340,7 +377,7 @@
       '<path d="M4 20c1.6-4 4.8-6 8-6s6.4 2 8 6" stroke="currentColor" stroke-width="1.3"/></svg>';
     state = {
       nickname: "", handle: "", avatarDataUrl: null,
-      age: "",
+      age: "", ageOther: "",
       platforms: new Set(), platformOther: "",
       times: new Set(),
       ending: null,

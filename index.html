@@ -62,7 +62,13 @@
       <!-- 2. 나이 -->
       <div class="field-group">
         <label class="field-label"><span class="field-number">2</span> 나이</label>
-        <input type="text" id="age" placeholder="예: 20, 20대 초반, 비공개" maxlength="20">
+        <div class="chip-group" data-group="age">
+          <button type="button" class="chip" data-value="성인">성인</button>
+          <button type="button" class="chip" data-value="미성년자">미성년자</button>
+          <button type="button" class="chip" data-value="비공개">비공개</button>
+          <button type="button" class="chip" data-value="직접 입력">직접 입력</button>
+        </div>
+        <input type="text" class="other-input hidden" id="ageOther" data-other-for="age" placeholder="예: 20세, 20대 초반">
       </div>
 
       <!-- 3. 주 이용 플랫폼 -->
