@@ -306,8 +306,10 @@
     display:flex; align-items:center; gap:10px;
     margin: 18px 0 16px;
   }
-  .card-divider::before, .card-divider::after{
-    content:''; flex:1; height:1px;
+  .card-divider .divider-line{
+    flex: 1 1 auto;
+    min-width: 10px; /* html2canvas 너비 계산 버그 방지용 */
+    height:1px;
     background: linear-gradient(90deg, transparent, rgba(201,162,39,.6), transparent);
   }
   .card-divider .diamond{

@@ -242,7 +242,7 @@
     if(state.avatarDataUrl){
       avatarInner.innerHTML = '<img src="' + state.avatarDataUrl + '" alt="프로필 사진">';
     } else {
-      avatarInner.innerHTML = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+      avatarInner.innerHTML = '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' +
         '<circle cx="12" cy="8" r="3.4" stroke-width="1.3"/>' +
         '<path d="M4 20c1.6-4 4.8-6 8-6s6.4 2 8 6" stroke-width="1.3"/></svg>';
     }
@@ -335,7 +335,7 @@
     document.querySelectorAll(".chip.active, .pill.active").forEach(function(el){ el.classList.remove("active"); });
     document.querySelectorAll(".other-input").forEach(function(el){ el.classList.add("hidden"); });
     document.getElementById("uploadFilename").textContent = "";
-    document.getElementById("photoPreview").innerHTML = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+    document.getElementById("photoPreview").innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' +
       '<circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.3"/>' +
       '<path d="M4 20c1.6-4 4.8-6 8-6s6.4 2 8 6" stroke="currentColor" stroke-width="1.3"/></svg>';
     state = {
@@ -358,13 +358,58 @@
     return "트친소_" + (base || "카드") + ".png";
   }
 
+  // 폰트 로딩/레이아웃이 완전히 안정된 뒤에 캡처하도록 한 프레임 대기
+  // (그렇지 않으면 캡처 순간에 일부 요소 크기가 일시적으로 0이 되어
+  //  html2canvas가 그라디언트를 그리다 오류를 낼 수 있음)
+  function waitForStableLayout(){
+    return new Promise(function(resolve){
+      var fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready.catch(function(){}) : Promise.resolve();
+      fontsReady.then(function(){
+        requestAnimationFrame(function(){
+          requestAnimationFrame(resolve);
+        });
+      });
+    });
+  }
+
+  // html2canvas 1.4.1의 알려진 버그 우회:
+  // 그라디언트 배경을 그릴 때 배경 영역이 반올림되어 폭/높이가 0인 캔버스가
+  // 만들어지는 경우가 있는데, 이때 createPattern이 바로 예외를 던져 캡처 전체가
+  // 실패함. (최신 html2canvas 소스에는 이 값을 최소 1px로 보정하는 수정이 있지만
+  // cdnjs의 1.4.1 배포판에는 아직 반영되어 있지 않음)
+  // -> 캡처하는 동안만 createPattern을 감싸서, 0px 캔버스가 들어오면 1x1로
+  //    보정한 뒤 원래 함수를 호출하도록 함. 캡처가 끝나면 원래 함수로 복구.
+  function captureWithZeroSizePatternFix(captureFn){
+    var proto = window.CanvasRenderingContext2D && window.CanvasRenderingContext2D.prototype;
+    var original = proto && proto.createPattern;
+    if(!proto || !original){
+      return Promise.resolve().then(captureFn);
+    }
+    proto.createPattern = function(image, repetition){
+      try{
+        if(image && typeof HTMLCanvasElement !== "undefined" && image instanceof HTMLCanvasElement){
+          if(image.width === 0) image.width = 1;
+          if(image.height === 0) image.height = 1;
+        }
+      } catch(patchErr){ /* 보정 실패 시에도 원래 함수는 그대로 시도 */ }
+      return original.call(this, image, repetition);
+    };
+    return Promise.resolve()
+      .then(captureFn)
+      .finally(function(){ proto.createPattern = original; });
+  }
+
   document.getElementById("downloadBtn").addEventListener("click", function(){
     var btn = this;
     var originalText = btn.textContent;
     btn.disabled = true;
     btn.textContent = "저장 중...";
     var cardEl = document.getElementById("card");
-    html2canvas(cardEl, { backgroundColor: null, scale: 3, useCORS: true }).then(function(canvas){
+    waitForStableLayout().then(function(){
+      return captureWithZeroSizePatternFix(function(){
+        return html2canvas(cardEl, { backgroundColor: null, scale: 3, useCORS: true });
+      });
+    }).then(function(canvas){
       var link = document.createElement("a");
       link.download = safeFilename(state.nickname);
       link.href = canvas.toDataURL("image/png");
