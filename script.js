@@ -2,7 +2,7 @@
   "use strict";
 
   // ---- 사이트 설정: 실제 배포 시 이 두 값을 바꿔주세요 ----
-  var SITE_NAME = "잉크로즈";
+  var SITE_NAME = "로판 트친소표 제작기";
   var SITE_URL  = "https://gmstghost.github.io/ROFAN_intro/";
   var WATERMARK = "이 트친소표는 " + SITE_NAME + "로 제작되었습니다. " + SITE_URL;
 
