@@ -464,7 +464,7 @@
 
   // ---- twitter share ----
   document.getElementById("tweetBtn").addEventListener("click", function(){
-    var text = "#트친소 #로판트친소 로판 트친소표 올려요!\n\n" + WATERMARK;
+    var text = "#로판_트친소 #로판트친소\n\n" + WATERMARK;
     var url = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text);
     window.open(url, "_blank", "noopener");
   });
