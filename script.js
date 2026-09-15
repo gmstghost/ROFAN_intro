@@ -3,8 +3,8 @@
 
   // ---- 사이트 설정: 실제 배포 시 이 두 값을 바꿔주세요 ----
   var SITE_NAME = "잉크로즈";
-  var SITE_URL  = "https://inkrose.example.com";
-  var WATERMARK = "이 트친소표는 " + SITE_NAME + " 사이트로 제작되었습니다. " + SITE_URL;
+  var SITE_URL  = "https://gmstghost.github.io/ROFAN_intro/";
+  var WATERMARK = "이 트친소표는 " + SITE_NAME + "로 제작되었습니다. " + SITE_URL;
 
   var state = {
     nickname: "", handle: "", avatarDataUrl: null,
