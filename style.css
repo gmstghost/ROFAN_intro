@@ -28,7 +28,7 @@
   a{color:var(--rose-dust);}
 
   .page{
-    max-width:1180px;
+    max-width:1320px;
     margin:0 auto;
     padding: 48px 24px 100px;
   }
@@ -62,7 +62,7 @@
   /* ---------- Layout ---------- */
   .builder{
     display:grid;
-    grid-template-columns: 1.15fr 0.85fr;
+    grid-template-columns: 0.9fr 1.1fr;
     gap: 40px;
     align-items:start;
   }
@@ -241,13 +241,42 @@
   }
 
   .card{
-    width: 400px;
+    width: 660px;
     max-width:100%;
     background: linear-gradient(165deg, var(--plum-deep) 0%, var(--burgundy) 100%);
     border: 1px solid rgba(201,162,39,0.55);
-    padding: 44px 32px 26px;
+    padding: 40px 40px 26px;
     position: relative;
     box-shadow: 0 30px 60px -24px rgba(0,0,0,0.65);
+  }
+
+  .card-body{
+    display:flex;
+    align-items:stretch;
+    gap:26px;
+  }
+
+  .card-left{
+    flex:0 0 176px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    justify-content:center;
+  }
+
+  .card-right{
+    flex:1 1 auto;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+
+  @media (max-width:620px){
+    .card{ width:400px; padding:44px 32px 26px; }
+    .card-body{ flex-direction:column; align-items:stretch; gap:0; }
+    .card-left{ flex:none; }
   }
 
   .card-flourish{ position:absolute; width:58px; height:58px; }
@@ -303,20 +332,39 @@
   }
 
   .card-divider{
-    display:flex; align-items:center; gap:10px;
-    margin: 18px 0 16px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    align-self:stretch;
   }
   .card-divider .divider-line{
     flex: 1 1 auto;
-    min-width: 10px; /* html2canvas 너비 계산 버그 방지용 */
-    height:1px;
-    background: linear-gradient(90deg, transparent, rgba(201,162,39,.6), transparent);
+    min-height: 10px; /* html2canvas 높이 계산 버그 방지용 */
+    width:1px;
+    background: linear-gradient(180deg, transparent, rgba(201,162,39,.6), transparent);
   }
   .card-divider .diamond{
     width:6px; height:6px;
     background: var(--gold);
     transform: rotate(45deg);
     flex-shrink:0;
+  }
+
+  @media (max-width:620px){
+    .card-divider{
+      flex-direction:row;
+      align-self:auto;
+      margin: 18px 0 16px;
+    }
+    .card-divider .divider-line{
+      width:auto;
+      min-width:10px;
+      min-height:0;
+      height:1px;
+      background: linear-gradient(90deg, transparent, rgba(201,162,39,.6), transparent);
+    }
   }
 
   .info-rows{ display:flex; flex-direction:column; gap:9px; font-size:13.5px; margin-bottom:4px; }
